@@ -2,6 +2,7 @@ import {
   Column,
   CreateDateColumn,
   Entity,
+  Index,
   JoinColumn,
   ManyToOne,
   PrimaryGeneratedColumn,
@@ -19,6 +20,10 @@ export enum OrderStatus {
 }
 
 @Entity('orders')
+@Index('UQ_orders_one_active_per_post', ['postId'], {
+  unique: true,
+  where: `"status" IN ('pending', 'confirmed')`,
+})
 export class Order {
   @PrimaryGeneratedColumn()
   id: number;
