@@ -27,6 +27,17 @@ import { User } from './entities/user.entity';
     }),
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    { provide: 'CURRENCY', useValue: 'VND' },
+    {
+      provide: 'PRICE_LIMIT',
+      inject: [ConfigService],
+      useFactory: (configService: ConfigService) => {
+        const maxPriceEnv = configService.get<string>('MAX_PRICE');
+        return maxPriceEnv ? Number(maxPriceEnv) : 100000000;
+      },
+    },
+  ],
 })
 export class AppModule {}
