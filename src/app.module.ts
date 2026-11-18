@@ -8,6 +8,7 @@ import { Order } from './entities/order.entity';
 import { Post } from './entities/post.entity';
 import { Review } from './entities/review.entity';
 import { User } from './entities/user.entity';
+import { CategoriesModule } from './modules/categories/categories.module';
 
 @Module({
   imports: [
@@ -25,6 +26,7 @@ import { User } from './entities/user.entity';
         synchronize: false,
       }),
     }),
+    CategoriesModule,
   ],
   controllers: [AppController],
   providers: [
