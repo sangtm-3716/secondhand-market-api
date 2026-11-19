@@ -8,16 +8,10 @@ import {
   PrimaryGeneratedColumn,
   UpdateDateColumn,
 } from 'typeorm';
+import { OrderStatus } from '../common/enums/order-status.enum';
 import { numericStringTransformer } from './numeric-string.transformer';
 import { Post } from './post.entity';
 import { User } from './user.entity';
-
-export enum OrderStatus {
-  Pending = 'pending',
-  Confirmed = 'confirmed',
-  Completed = 'completed',
-  Cancelled = 'cancelled',
-}
 
 @Entity('orders')
 @Index('UQ_orders_one_active_per_post', ['postId'], {

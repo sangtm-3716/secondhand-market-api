@@ -6,15 +6,10 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { PostStatus } from '../common/enums/post-status.enum';
 import { numericStringTransformer } from './numeric-string.transformer';
 import { Category } from './category.entity';
 import { User } from './user.entity';
-
-export enum PostStatus {
-  Available = 'available',
-  Reserved = 'reserved',
-  Sold = 'sold',
-}
 
 @Entity('posts')
 export class Post {
