@@ -1,6 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import {
+  DEFAULT_DB_TYPE,
+  DEFAULT_MAX_PRICE,
+} from './common/constants/app.constants';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Category } from './entities/category.entity';
@@ -16,7 +20,7 @@ import { CategoriesModule } from './modules/categories/categories.module';
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
-        type: 'postgres',
+        type: config.get<typeof DEFAULT_DB_TYPE>('DB_TYPE', DEFAULT_DB_TYPE),
         host: config.get<string>('DB_HOST'),
         port: Number(config.get<string>('DB_PORT')),
         username: config.get<string>('DB_USERNAME'),
@@ -37,7 +41,7 @@ import { CategoriesModule } from './modules/categories/categories.module';
       inject: [ConfigService],
       useFactory: (configService: ConfigService) => {
         const maxPriceEnv = configService.get<string>('MAX_PRICE');
-        return maxPriceEnv ? Number(maxPriceEnv) : 100000000;
+        return maxPriceEnv ? Number(maxPriceEnv) : DEFAULT_MAX_PRICE;
       },
     },
   ],

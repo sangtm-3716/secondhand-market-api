@@ -1,6 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
+import { DEFAULT_MAX_PRICE } from './common/constants/app.constants';
 
 describe('AppController', () => {
   let appController: AppController;
@@ -11,7 +12,7 @@ describe('AppController', () => {
       providers: [
         AppService,
         { provide: 'CURRENCY', useValue: 'VND' },
-        { provide: 'PRICE_LIMIT', useValue: 100000000 },
+        { provide: 'PRICE_LIMIT', useValue: DEFAULT_MAX_PRICE },
       ],
     }).compile();
 
