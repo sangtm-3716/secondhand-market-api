@@ -2,7 +2,7 @@ import { Controller, Get, HttpStatus } from '@nestjs/common';
 import { AppService } from './app.service';
 import { AppError } from './common/app-error';
 
-@Controller()
+@Controller({ version: '1' })
 export class AppController {
   constructor(private readonly appService: AppService) {}
 
