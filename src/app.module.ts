@@ -13,6 +13,7 @@ import { Post } from './entities/post.entity';
 import { Review } from './entities/review.entity';
 import { User } from './entities/user.entity';
 import { CategoriesModule } from './modules/categories/categories.module';
+import { HealthModule } from './modules/health/health.module';
 
 @Module({
   imports: [
@@ -31,6 +32,7 @@ import { CategoriesModule } from './modules/categories/categories.module';
       }),
     }),
     CategoriesModule,
+    HealthModule,
   ],
   controllers: [AppController],
   providers: [
