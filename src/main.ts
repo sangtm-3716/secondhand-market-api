@@ -19,6 +19,12 @@ async function bootstrap() {
     .setTitle('Secondhand Market API')
     .setDescription('API for buying and selling secondhand items')
     .setVersion('1.0')
+    .addTag('app', 'placeholder endpoints serving basic content')
+    .addTag('posts', 'Item listings')
+    .addTag('orders', 'purchase orders')
+    .addTag('reviews', 'buyer reviews after a completed order')
+    .addTag('health', 'health check endpoint with db ping')
+    .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
   SwaggerModule.setup('docs', app, document);
