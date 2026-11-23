@@ -23,31 +23,4 @@ export class AppController {
   getBusiness() {
     return this.appService.getBusinessData();
   }
-
-  //TODO: remove after lesson complete
-  @Get('app-error')
-  @ApiOperation({ summary: 'Demo: always throws an AppError' })
-  @ApiResponse({
-    status: 404,
-    description:
-      'Always returned: { code: "POST_NOT_FOUND", message, path, timestamp }',
-  })
-  getAppError() {
-    throw new AppError(
-      'POST_NOT_FOUND',
-      'post not found',
-      HttpStatus.NOT_FOUND,
-    );
-  }
-
-  @Get('common-error')
-  @ApiOperation({ summary: 'Demo: always throws a plain Error' })
-  @ApiResponse({
-    status: 500,
-    description:
-      'Always returned: { code: "INTERNAL_SERVER_ERROR", message, path, timestamp }',
-  })
-  getCommonError() {
-    throw new Error('common, everyday error');
-  }
 }
