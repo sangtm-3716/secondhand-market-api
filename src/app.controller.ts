@@ -1,7 +1,6 @@
-import { Controller, Get, HttpStatus } from '@nestjs/common';
+import { Controller, Get } from '@nestjs/common';
 import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AppService } from './app.service';
-import { AppError } from './common/app-error';
 
 @ApiTags('app')
 @Controller({ version: '1' })
