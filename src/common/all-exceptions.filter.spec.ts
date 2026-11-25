@@ -12,6 +12,8 @@ describe('AllExceptionsFilter', () => {
   let json: jest.Mock;
   let status: jest.Mock;
   let host: ArgumentsHost;
+  let warn: jest.SpyInstance;
+  let error: jest.SpyInstance;
 
   beforeEach(() => {
     filter = new AllExceptionsFilter();
@@ -24,8 +26,8 @@ describe('AllExceptionsFilter', () => {
         getResponse: () => ({ status }),
       }),
     } as unknown as ArgumentsHost;
-    jest.spyOn(Logger.prototype, 'warn').mockImplementation();
-    jest.spyOn(Logger.prototype, 'error').mockImplementation();
+    warn = jest.spyOn(Logger.prototype, 'warn').mockImplementation();
+    error = jest.spyOn(Logger.prototype, 'error').mockImplementation();
   });
 
   afterEach(() => {
@@ -43,7 +45,15 @@ describe('AllExceptionsFilter', () => {
         path: '/v1/missing',
       }),
     );
-    expect(Logger.prototype.warn).toHaveBeenCalled();
+    expect(warn).toHaveBeenCalled();
+  });
+
+  it('omits details for NotFoundException', () => {
+    filter.catch(new NotFoundException('Post not found'), host);
+
+    expect(json).toHaveBeenCalledWith(
+      expect.objectContaining({ details: undefined }),
+    );
   });
 
   it('maps unknown errors to 500 without leaking the message', () => {
@@ -56,7 +66,7 @@ describe('AllExceptionsFilter', () => {
         message: 'Unknown error',
       }),
     );
-    expect(Logger.prototype.error).toHaveBeenCalled();
+    expect(error).toHaveBeenCalled();
   });
 
   it('uses the custom code from AppError', () => {

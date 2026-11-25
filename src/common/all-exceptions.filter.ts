@@ -8,6 +8,24 @@ import {
 } from '@nestjs/common';
 import { Request, Response } from 'express';
 
+function isRedundantNestBody(
+  b: Record<string, unknown>,
+  status: number,
+): boolean {
+  const { statusCode, message: _message, error, ...rest } = b;
+
+  const isErrorSameAsStatus =
+    error === undefined ||
+    (typeof error === 'string' &&
+      error.toUpperCase().replace(/ /g, '_') === HttpStatus[status]);
+
+  return (
+    Object.keys(rest).length === 0 &&
+    isErrorSameAsStatus &&
+    (statusCode === undefined || statusCode === status)
+  );
+}
+
 @Catch()
 export class AllExceptionsFilter implements ExceptionFilter {
   private readonly logger = new Logger(AllExceptionsFilter.name);
@@ -33,7 +51,7 @@ export class AllExceptionsFilter implements ExceptionFilter {
       } else {
         const b = body as Record<string, unknown>;
         if (typeof b.code === 'string') code = b.code;
-        else details = body; // giu nguyen than co cau truc
+        else if (!isRedundantNestBody(b, status)) details = body;
 
         if (Array.isArray(b.message)) message = b.message.join('; ');
         else if (typeof b.message === 'string') message = b.message;
