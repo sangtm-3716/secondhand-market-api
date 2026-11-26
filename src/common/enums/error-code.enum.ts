@@ -4,4 +4,5 @@ export enum ErrorCode {
   InvalidCredentials = 'INVALID_CREDENTIALS',
   MissingToken = 'MISSING_TOKEN',
   InvalidToken = 'INVALID_TOKEN',
+  ForbiddenRole = 'FORBIDDEN_ROLE',
 }
