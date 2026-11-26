@@ -18,6 +18,7 @@ async function bootstrap() {
     .addTag('orders', 'purchase orders')
     .addTag('reviews', 'buyer reviews after a completed order')
     .addTag('health', 'health check endpoint with db ping')
+    .addTag('auth', 'register and login')
     .addBearerAuth()
     .build();
   const document = SwaggerModule.createDocument(app, config);
