@@ -7,6 +7,7 @@ import {
   Post,
 } from '@nestjs/common';
 import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { Throttle } from '@nestjs/throttler';
 import { AuthService } from './auth.service';
 import { CurrentUser } from './decorators/current-user.decorator';
 import { Public } from './decorators/public.decorator';
@@ -17,12 +18,15 @@ import { Roles } from './decorators/roles.decorator';
 import { UserRole } from '../../common/enums/user-role.enum';
 import { RefreshDto } from './dto/refresh.dto';
 
+const AUTH_THROTTLE = { short: { limit: 5, ttl: 60_000 } };
+
 @ApiTags('auth')
 @Controller({ version: '1', path: 'auth' })
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Public()
+  @Throttle(AUTH_THROTTLE)
   @Post('register')
   @ApiResponse({ status: 201, description: 'User registered' })
   @ApiResponse({ status: 409, description: 'EMAIL_TAKEN: email already used' })
@@ -31,6 +35,7 @@ export class AuthController {
   }
 
   @Public()
+  @Throttle(AUTH_THROTTLE)
   @Post('login')
   @HttpCode(HttpStatus.OK)
   @ApiResponse({
@@ -41,6 +46,7 @@ export class AuthController {
     status: 401,
     description: 'INVALID_CREDENTIALS: wrong email or password',
   })
+  @ApiResponse({ status: 429, description: 'Too many login attempts' })
   login(@Body() dto: LoginDto) {
     return this.authService.login(dto);
   }

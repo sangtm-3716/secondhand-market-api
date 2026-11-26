@@ -5,6 +5,7 @@ import {
   HealthCheckService,
   TypeOrmHealthIndicator,
 } from '@nestjs/terminus';
+import { SkipThrottle } from '@nestjs/throttler';
 import { Public } from '../auth/decorators/public.decorator';
 
 @ApiTags('health')
@@ -16,6 +17,7 @@ export class HealthController {
   ) {}
 
   @Public()
+  @SkipThrottle({ short: true })
   @Get()
   @HealthCheck()
   @ApiResponse({ status: 503, description: 'Health check failed' })

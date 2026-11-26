@@ -6,6 +6,8 @@ import {
   DEFAULT_MAX_PRICE,
 } from './common/constants/app.constants';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { APP_GUARD } from '@nestjs/core';
+import { ThrottlerGuard, ThrottlerModule } from '@nestjs/throttler';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Category } from './entities/category.entity';
 import { Order } from './entities/order.entity';
@@ -20,6 +22,7 @@ import { AuthModule } from './modules/auth/auth.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
+    ThrottlerModule.forRoot([{ name: 'short', ttl: 1000, limit: 3 }]),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
@@ -40,6 +43,7 @@ import { AuthModule } from './modules/auth/auth.module';
   controllers: [AppController],
   providers: [
     AppService,
+    { provide: APP_GUARD, useClass: ThrottlerGuard },
     { provide: 'CURRENCY', useValue: 'VND' },
     {
       provide: 'PRICE_LIMIT',
