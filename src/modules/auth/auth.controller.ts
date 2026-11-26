@@ -1,7 +1,16 @@
-import { Body, Controller, HttpCode, HttpStatus, Post } from '@nestjs/common';
-import { ApiResponse, ApiTags } from '@nestjs/swagger';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+} from '@nestjs/common';
+import { ApiBearerAuth, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { AuthService } from './auth.service';
+import { CurrentUser } from './decorators/current-user.decorator';
 import { Public } from './decorators/public.decorator';
+import type { JwtPayload } from './jwt-payload';
 import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 
@@ -28,5 +37,13 @@ export class AuthController {
   })
   login(@Body() dto: LoginDto) {
     return this.authService.login(dto);
+  }
+
+  @Get('me')
+  @ApiBearerAuth()
+  @ApiResponse({ status: 200, description: 'Returns { id, email, role }' })
+  @ApiResponse({ status: 401, description: 'MISSING_TOKEN or INVALID_TOKEN' })
+  me(@CurrentUser() user: JwtPayload) {
+    return { id: user.id, email: user.email, role: user.role };
   }
 }
