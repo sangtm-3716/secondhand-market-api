@@ -15,6 +15,7 @@ import { LoginDto } from './dto/login.dto';
 import { RegisterDto } from './dto/register.dto';
 import { Roles } from './decorators/roles.decorator';
 import { UserRole } from '../../common/enums/user-role.enum';
+import { RefreshDto } from './dto/refresh.dto';
 
 @ApiTags('auth')
 @Controller({ version: '1', path: 'auth' })
@@ -32,13 +33,31 @@ export class AuthController {
   @Public()
   @Post('login')
   @HttpCode(HttpStatus.OK)
-  @ApiResponse({ status: 200, description: 'Returns accessToken' })
+  @ApiResponse({
+    status: 200,
+    description: 'Returns accessToken and refreshToken',
+  })
   @ApiResponse({
     status: 401,
     description: 'INVALID_CREDENTIALS: wrong email or password',
   })
   login(@Body() dto: LoginDto) {
     return this.authService.login(dto);
+  }
+
+  @Public()
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  @ApiResponse({
+    status: 200,
+    description: 'Revokes the given refresh token, returns a new token pair',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'INVALID_REFRESH_TOKEN: unknown, expired or revoked',
+  })
+  refresh(@Body() dto: RefreshDto) {
+    return this.authService.refresh(dto);
   }
 
   @Get('me')

@@ -10,6 +10,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { Category } from './entities/category.entity';
 import { Order } from './entities/order.entity';
 import { Post } from './entities/post.entity';
+import { RefreshToken } from './entities/refresh-token.entity';
 import { Review } from './entities/review.entity';
 import { User } from './entities/user.entity';
 import { CategoriesModule } from './modules/categories/categories.module';
@@ -28,7 +29,7 @@ import { AuthModule } from './modules/auth/auth.module';
         username: config.get<string>('DB_USERNAME'),
         password: config.get<string>('DB_PASSWORD'),
         database: config.get<string>('DB_NAME'),
-        entities: [User, Category, Post, Order, Review],
+        entities: [User, Category, Post, Order, Review, RefreshToken],
         synchronize: false,
       }),
     }),
