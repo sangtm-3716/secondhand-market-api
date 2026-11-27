@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import * as bcrypt from 'bcrypt';
 import { createHash, randomBytes } from 'node:crypto';
 import { JwtService } from '@nestjs/jwt';
-import { IsNull, MoreThan, Repository } from 'typeorm';
+import { IsNull, MoreThan, QueryFailedError, Repository } from 'typeorm';
 import { AppError } from '../../common/app-error';
 import { ErrorCode } from '../../common/enums/error-code.enum';
 import { RefreshToken } from '../../entities/refresh-token.entity';
@@ -40,11 +40,29 @@ export class AuthService {
     }
 
     const passwordHash = await bcrypt.hash(dto.password, BCRYPT_COST);
-    const user = await this.users.save(
-      this.users.create({ name: dto.name, email: dto.email, passwordHash }),
-    );
-
-    return { id: user.id, name: user.name, email: user.email, role: user.role };
+    try {
+      const user = await this.users.save(
+        this.users.create({ name: dto.name, email: dto.email, passwordHash }),
+      );
+      return {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        role: user.role,
+      };
+    } catch (error: unknown) {
+      if (
+        error instanceof QueryFailedError &&
+        error.driverError.code === '23505'
+      ) {
+        throw new AppError(
+          ErrorCode.EmailTaken,
+          'Email is already registered',
+          HttpStatus.CONFLICT,
+        );
+      }
+      throw error;
+    }
   }
 
   async login(dto: LoginDto) {
