@@ -4,6 +4,8 @@ import { AppService } from './app.service';
 import {
   DEFAULT_DB_TYPE,
   DEFAULT_MAX_PRICE,
+  THROTTLE_LIMIT,
+  THROTTLE_TTL_MS,
 } from './common/constants/app.constants';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { APP_GUARD } from '@nestjs/core';
@@ -22,7 +24,9 @@ import { AuthModule } from './modules/auth/auth.module';
 @Module({
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
-    ThrottlerModule.forRoot([{ name: 'short', ttl: 1000, limit: 3 }]),
+    ThrottlerModule.forRoot([
+      { name: 'short', ttl: THROTTLE_TTL_MS, limit: THROTTLE_LIMIT },
+    ]),
     TypeOrmModule.forRootAsync({
       inject: [ConfigService],
       useFactory: (config: ConfigService) => ({
