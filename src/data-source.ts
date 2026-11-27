@@ -3,6 +3,7 @@ import { DEFAULT_DB_TYPE } from './common/constants/app.constants';
 import { Category } from './entities/category.entity';
 import { Order } from './entities/order.entity';
 import { Post } from './entities/post.entity';
+import { RefreshToken } from './entities/refresh-token.entity';
 import { Review } from './entities/review.entity';
 import { User } from './entities/user.entity';
 
@@ -15,7 +16,7 @@ export default new DataSource({
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_NAME,
-  entities: [User, Category, Post, Order, Review],
+  entities: [User, Category, Post, Order, Review, RefreshToken],
   migrations: ['dist/migrations/*.js'],
   synchronize: false,
 });

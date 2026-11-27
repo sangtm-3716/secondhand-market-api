@@ -6,6 +6,7 @@ import {
 } from '@nestjs/common';
 import { AllExceptionsFilter } from './all-exceptions.filter';
 import { AppError } from './app-error';
+import { ErrorCode } from './enums/error-code.enum';
 
 describe('AllExceptionsFilter', () => {
   let filter: AllExceptionsFilter;
@@ -71,7 +72,11 @@ describe('AllExceptionsFilter', () => {
 
   it('uses the custom code from AppError', () => {
     filter.catch(
-      new AppError('POST_NOT_FOUND', 'Post not found', HttpStatus.NOT_FOUND),
+      new AppError(
+        ErrorCode.PostNotFound,
+        'Post not found',
+        HttpStatus.NOT_FOUND,
+      ),
       host,
     );
 

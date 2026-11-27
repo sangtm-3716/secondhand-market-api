@@ -4,6 +4,7 @@ import {
   CreateDateColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
+import { UserRole } from '../common/enums/user-role.enum';
 import { numericStringTransformer } from './numeric-string.transformer';
 
 @Entity('users')
@@ -16,6 +17,9 @@ export class User {
 
   @Column({ unique: true })
   email: string;
+
+  @Column({ type: 'varchar', length: 20, default: UserRole.Member })
+  role: UserRole;
 
   @Column({ name: 'password_hash' })
   passwordHash: string;
